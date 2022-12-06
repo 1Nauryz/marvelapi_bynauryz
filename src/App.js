@@ -1,52 +1,24 @@
-import './App.css';
-import Header from './components/Header'
-import CharacterTable from './components/CharacterTable'
-import axios from 'axios'
-import React , {useEffect,useState} from 'react'
-import Search from './components/Search'
-// a1c93cbb1e7c45a1d04e7457d23169a5
-const hash =  "bd0722d5750b6362d5ba0212ca36726b"
+import "./app.css";
+import { Routes, Route } from "react-router-dom";
+import AllCountries from "./components/AllCountries/AllCountries";
+import CountryInfo from "./components/CountryInfo/CountryInfo";
 
 function App() {
-    const[items,setItems] = useState([])
-    const[isLoading,setLoading] = useState(true)
-    const [query,setQuery] = useState('')
-
-    useEffect(()=>{
-        const fetch = async()=>{
-            if(query===''){
-                if(localStorage.getItem('favorites')==='[]' || !localStorage.getItem('favorites')){
-                    localStorage.setItem('favorites', '[]')
-                    const result = await axios(`http://gateway.marvel.com/v1/public/characters?ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
-                    console.log(result.data.data.results)
-                    setItems(result.data.data.results)
-                    setLoading(false)
-                }else{
-                    let favorite = JSON.parse(localStorage.getItem('favorites'))
-                    setItems(favorite)
-                    setLoading(false)
-                }
-
-
-            }else{
-                const result = await axios(`http://gateway.marvel.com/v1/public/characters?nameStartsWith=${query}&ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
-                console.log(result.data.data.results)
-                setItems(result.data.data.results)
-                setLoading(false)
-            }
-
-        }
-
-        fetch()
-    },[query])
-
-    return (
+  return (
+    <>
+      <div className="header">
         <div className="container">
-            <Header />
-            <Search search={(q)=>setQuery(q)}></Search>
-            <CharacterTable items={items} isLoading={isLoading} />
+          <h5>Where in the world</h5>
         </div>
-    );
+      </div>
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<AllCountries />} />
+          <Route path="/country/:countryName" element={<CountryInfo />} />
+        </Routes>
+      </div>
+    </>
+  );
 }
 
 export default App;
