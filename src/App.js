@@ -1,21 +1,23 @@
-import React from 'react';
-import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { GlobalStorage } from './Contexts/GlobalContext';
-import Home from './Components/Home';
-import Details from './Components/Details/index';
+import "./app.css";
+import { Routes, Route } from "react-router-dom";
+import AllCountries from "./components/AllCountries/AllCountries";
+import CountryInfo from "./components/CountryInfo/CountryInfo";
 
 function App() {
   return (
-    <BrowserRouter>
-      <GlobalStorage>
+    <>
+      <div className="header">
+        <div className="container">
+          <h5>Where in the world</h5>
+        </div>
+      </div>
+      <div className="container">
         <Routes>
-          <Route path="/*" element={<Home />} />
-          <Route path="rest-countries-api-with-color-theme-switcher" element={<Home />} /* this route is only for use on GitHub Pages */ />
-          <Route path="/:name" element={<Details />} />
+          <Route path="/" element={<AllCountries />} />
+          <Route path="/country/:countryName" element={<CountryInfo />} />
         </Routes>
-      </GlobalStorage>
-    </BrowserRouter>
+      </div>
+    </>
   );
 }
 
