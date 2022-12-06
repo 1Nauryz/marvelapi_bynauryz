@@ -1,52 +1,22 @@
+import React from 'react';
 import './App.css';
-import Header from './components/Header'
-import CharacterTable from './components/CharacterTable'
-import axios from 'axios'
-import React , {useEffect,useState} from 'react'
-import Search from './components/Search'
-// a1c93cbb1e7c45a1d04e7457d23169a5
-const hash =  "bd0722d5750b6362d5ba0212ca36726b"
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { GlobalStorage } from './Contexts/GlobalContext';
+import Home from './Components/Home';
+import Details from './Components/Details/index';
 
 function App() {
-    const[items,setItems] = useState([])
-    const[isLoading,setLoading] = useState(true)
-    const [query,setQuery] = useState('')
-
-    useEffect(()=>{
-        const fetch = async()=>{
-            if(query===''){
-                if(localStorage.getItem('favorites')==='[]' || !localStorage.getItem('favorites')){
-                    localStorage.setItem('favorites', '[]')
-                    const result = await axios(`http://gateway.marvel.com/v1/public/characters?ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
-                    console.log(result.data.data.results)
-                    setItems(result.data.data.results)
-                    setLoading(false)
-                }else{
-                    let favorite = JSON.parse(localStorage.getItem('favorites'))
-                    setItems(favorite)
-                    setLoading(false)
-                }
-
-
-            }else{
-                const result = await axios(`http://gateway.marvel.com/v1/public/characters?nameStartsWith=${query}&ts=1&apikey=344d40df0c8cc373141c1dc321fae9cf&hash=${hash}`)
-                console.log(result.data.data.results)
-                setItems(result.data.data.results)
-                setLoading(false)
-            }
-
-        }
-
-        fetch()
-    },[query])
-
-    return (
-        <div className="container">
-            <Header />
-            <Search search={(q)=>setQuery(q)}></Search>
-            <CharacterTable items={items} isLoading={isLoading} />
-        </div>
-    );
+  return (
+    <BrowserRouter>
+      <GlobalStorage>
+        <Routes>
+          <Route path="/*" element={<Home />} />
+          <Route path="rest-countries-api-with-color-theme-switcher" element={<Home />} /* this route is only for use on GitHub Pages */ />
+          <Route path="/:name" element={<Details />} />
+        </Routes>
+      </GlobalStorage>
+    </BrowserRouter>
+  );
 }
 
 export default App;
